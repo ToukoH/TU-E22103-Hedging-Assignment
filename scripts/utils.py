@@ -31,6 +31,11 @@ def delta(S, E, T, r, sigma, option_type='call'):
         return -norm.cdf(-d1)
     else:
         raise ValueError("Invalid option type. Use 'call' or 'put'.")
+    
+def gamma(S, E, T, r, sigma):
+    d1 = (np.log(S / E) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+    gamma = norm.pdf(d1) / (S * sigma * np.sqrt(T))
+    return gamma
 
 def vega(S, E, T, r, sigma):
     d1 = (np.log(S / E) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))

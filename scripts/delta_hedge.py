@@ -26,11 +26,6 @@ msft_option_deltas = [delta(underlying_price, E_msft, (T - day)/365, r, sigma, o
 googl_option_deltas = [delta(underlying_price, E_googl, (T - day)/365, r, sigma, option_type) 
                       for day, underlying_price in enumerate(googl_prices)]
 
-msft_option_vegas = [vega(underlying_price, E_msft, (T - day)/365, r, sigma) 
-                      for day, underlying_price in enumerate(msft_prices)]
-googl_option_vegas = [vega(underlying_price, E_googl, (T - day)/365, r, sigma) 
-                      for day, underlying_price in enumerate(googl_prices)]
-
 # Implied volatility is really close to 0.2 so we assume it to be constant when calculating greeks and option prices.
 # We use these values to calculate the error so delta and delta-vega don't yield the same A_i.
 msft_implied_vols = [implied_volatility(price, underlying_price, E_msft, (T - day)/365, r) 
@@ -43,7 +38,6 @@ msft_data = pd.DataFrame({
     'Underlying Price': msft_prices,
     'Call Option Price': msft_option_prices,
     'Option Delta': msft_option_deltas,
-    'Option Vega':msft_option_vegas
 })
 
 def delta_hedge(price_of_underlying, price_of_call_option, delta_of_option):
