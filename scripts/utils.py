@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.stats import norm 
+from scipy.stats import norm
+from scipy.optimize import brentq
 
 def black_scholes(S, E, T, r, sigma, option_type='call'):
     """
@@ -34,3 +35,19 @@ def delta(S, E, T, r, sigma, option_type='call'):
 def vega(S, E, T, r, sigma):
     d1 = (np.log(S / E) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
     return S * norm.pdf(d1) * np.sqrt(T)
+
+def implied_volatility(price, S, E, T, r):
+    def objective(sigma):
+        return black_scholes(S, E, T, r, sigma) - price
+
+    sigma_min, sigma_max = 0.001, 5.0  # Reasonable bounds for volatility
+    try:
+        implied_vol = brentq(objective, sigma_min, sigma_max)
+    except ValueError:
+        print("No solution found within given bounds.")
+        return None
+    except RuntimeError:
+        print("Failed to converge to a solution.")
+        return None
+
+    return implied_vol
